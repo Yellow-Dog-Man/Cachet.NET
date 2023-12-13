@@ -1,10 +1,8 @@
 ﻿namespace Cachet.NET.Responses
 {
     using System.Collections.Generic;
-
+    using System.Text.Json.Serialization;
     using global::Cachet.NET.Responses.Objects;
-
-    using RestSharp.Deserializers;
 
     public class ComponentGroupsResponse
     {
@@ -20,7 +18,7 @@
         /// <summary>
         /// Gets or sets the groups.
         /// </summary>
-        [DeserializeAs(Name = "data")]
+        [JsonPropertyName("groups")]
         public List<ComponentGroupObject> Groups
         {
             get;

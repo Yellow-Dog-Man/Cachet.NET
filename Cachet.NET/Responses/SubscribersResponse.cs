@@ -1,11 +1,9 @@
 ﻿namespace Cachet.NET.Responses
 {
     using System.Collections.Generic;
-
+    using System.Text.Json.Serialization;
     using global::Cachet.NET.Responses.Metas;
     using global::Cachet.NET.Responses.Objects;
-
-    using RestSharp.Deserializers;
 
     public class SubscribersResponse
     {
@@ -21,7 +19,7 @@
         /// <summary>
         /// Gets or sets the subscribers.
         /// </summary>
-        [DeserializeAs(Name = "data")]
+        [JsonPropertyName("data")]
         public List<SubscriberObject> Subscribers
         {
             get;

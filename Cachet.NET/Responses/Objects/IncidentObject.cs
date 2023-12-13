@@ -1,21 +1,19 @@
 ﻿namespace Cachet.NET.Responses.Objects
 {
     using System;
-
+    using System.Text.Json.Serialization;
     using global::Cachet.NET.Responses.Enums;
-
-    using RestSharp.Deserializers;
 
     public class IncidentObject
     {
-        [DeserializeAs(Name = "id")]
+        [JsonPropertyName("id")]
         public int Identifier
         {
             get;
             set;
         }
 
-        [DeserializeAs(Name = "component_id")]
+        [JsonPropertyName("component_id")]
         public int ComponentId
         {
             get;
@@ -69,7 +67,7 @@
             set;
         }
 
-        [DeserializeAs(Name = "human-status")]
+        [JsonPropertyName("status_name")]
         public string StatusName
         {
             get;

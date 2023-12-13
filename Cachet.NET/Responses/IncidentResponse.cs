@@ -2,7 +2,7 @@
 {
     using global::Cachet.NET.Responses.Objects;
 
-    using RestSharp.Deserializers;
+    using System.Text.Json.Serialization;
 
     public class IncidentResponse
     {
@@ -18,7 +18,7 @@
         /// <summary>
         /// Gets or sets the Incident.
         /// </summary>
-        [DeserializeAs(Name = "data")]
+        [JsonPropertyName("data")]
         public IncidentObject Incident
         {
             get;
