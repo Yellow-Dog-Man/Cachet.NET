@@ -1,17 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+	<PackageId>YellowDogMan.Cachet.NET</PackageId>
     <TargetFramework>net7.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Copyright>Copyright © 2021</Copyright>
-    <Authors>Berkan YILDIZ</Authors>
-    <RepositoryUrl>https://github.com/BerkanYildiz/Cachet.NET</RepositoryUrl>
+    <Copyright>Copyright © 2021 Berkan YILDIZ</Copyright>
+    <Authors>Berkan YILDIZ, Yellow Dog Man Studios s.r.o.</Authors>
+    <RepositoryUrl>https://github.com/Yellow-Dog-Man/Cachet.NET</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Description>.NET library to communicate with the CachetHQ API to create, manage, and handle outages.</Description>
+    <Description>Fork of .NET library to communicate with the CachetHQ API to create, manage, and handle outages.</Description>
     <PackageTags>cachet, hq, cachethq, library, uptime, outage, rest, api, status, page, statuspage</PackageTags>
-    <PackageProjectUrl>https://github.com/BerkanYildiz/Cachet.NET</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/Yellow-Dog-Man/Cachet.NET</PackageProjectUrl>
     <Version>1.2.0</Version>
     <PackageIcon>icon.png</PackageIcon>
     <PackageIconUrl />
