@@ -18,7 +18,7 @@
         /// <summary>
         /// Gets or sets the components.
         /// </summary>
-        [JsonPropertyName("components")]
+        [JsonPropertyName("data")]
         public List<ComponentObject> Components
         {
             get;

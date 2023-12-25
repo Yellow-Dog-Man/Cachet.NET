@@ -1,6 +1,5 @@
 ﻿namespace Cachet.NET.Responses.Objects
 {
-    using global::Cachet.NET.Converters;
     using global::Cachet.NET.Responses.Enums;
     using System;
     using System.Collections.Generic;
@@ -58,7 +57,6 @@
         }
 
         [JsonPropertyName("created_at")]
-        [JsonConverter(typeof(CachetDateTimeConverter))]
         public DateTime CreatedAt
         {
             get;
@@ -66,7 +64,6 @@
         }
 
         [JsonPropertyName("updated_at")]
-        [JsonConverter(typeof(CachetDateTimeConverter))]
         public DateTime UpdatedAt
         {
             get;
@@ -74,7 +71,6 @@
         }
 
         [JsonPropertyName("deleted_at")]
-        [JsonConverter(typeof(CachetDateTimeConverter))]
         public DateTime? DeletedAt
         {
             get;

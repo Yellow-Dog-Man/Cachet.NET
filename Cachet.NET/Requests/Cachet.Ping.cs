@@ -6,20 +6,6 @@
 
     public partial class Cachet
     {
-        /// <summary>
-        /// Pings the Cachet API.
-        /// </summary>
-        public bool Ping()
-        {
-            var Response = this.Get<PingResponse>("ping");
-
-            if (Response != null)
-            {
-                return Response.IsValid;
-            }
-
-            return false;
-        }
 
         /// <summary>
         /// Pings the Cachet API.
