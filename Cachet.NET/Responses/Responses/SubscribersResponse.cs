@@ -1,13 +1,11 @@
 ﻿namespace Cachet.NET.Responses
 {
     using System.Collections.Generic;
-
+    using System.Text.Json.Serialization;
     using global::Cachet.NET.Responses.Metas;
     using global::Cachet.NET.Responses.Objects;
 
-    using RestSharp.Deserializers;
-
-    public class MetricPointsResponse
+    public class SubscribersResponse
     {
         /// <summary>
         /// Gets or sets the <see cref="Meta"/>.
@@ -19,10 +17,10 @@
         }
 
         /// <summary>
-        /// Gets or sets the metric's points.
+        /// Gets or sets the subscribers.
         /// </summary>
-        [DeserializeAs(Name = "data")]
-        public List<MetricPointObject> Points
+        [JsonPropertyName("data")]
+        public List<SubscriberObject> Subscribers
         {
             get;
             set;

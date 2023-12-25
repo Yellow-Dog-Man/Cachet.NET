@@ -1,4 +1,4 @@
-﻿namespace Cachet.NET.Responses.Objects
+﻿namespace Cachet.NET.Responses.Enums
 {
     /// <summary>
     /// Available Component status values from https://docs.cachethq.io/v1.0/docs/component-statuses

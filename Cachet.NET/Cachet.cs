@@ -1,10 +1,15 @@
 ﻿namespace Cachet.NET
 {
+    using System;
     using System.Threading;
     using System.Threading.Tasks;
+    using System.Text.Json;
 
     using RestSharp;
     using RestSharp.Authenticators;
+    using RestSharp.Serializers.Json;
+    using System.Text.Json.Serialization.Metadata;
+    using System.Net;
 
     public partial class Cachet
     {
@@ -24,6 +29,28 @@
             // ...
         }
 
+        private JsonSerializerOptions GetSerializerOptions()
+        {
+            JsonSerializerOptions serializerOptions = new()
+            {
+                TypeInfoResolver = new DefaultJsonTypeInfoResolver
+                {
+                    Modifiers = { CachetTagsExcluder.IgnoreTags }
+                }
+            };
+            serializerOptions.Converters.Add(new CachetDateTimeConverter());
+            return serializerOptions;
+        }
+
+        private RestClientOptions GetDefaultRestClientOptions(string host)
+        {
+            return new RestClientOptions(host)
+            {
+                ThrowOnAnyError = true,
+                ThrowOnDeserializationError = true,
+            };
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Cachet"/> class.
         /// Leave the ApiKey argument empty if using the demo API.
@@ -32,7 +59,7 @@
         /// <param name="ApiKey">The API key .</param>
         public Cachet(string Host, string ApiKey = "")
         {
-            this.Rest = new RestClient(Host);
+            this.Rest = new RestClient(this.GetDefaultRestClientOptions(Host), configureSerialization: s => s.UseSystemTextJson(GetSerializerOptions()));
 
             if (!string.IsNullOrEmpty(ApiKey))
             {
@@ -48,68 +75,10 @@
         /// <param name="Password">The password.</param>
         public Cachet(string Host, string Email, string Password)
         {
-            this.Rest = new RestClient(Host)
-            {
-                Authenticator = new HttpBasicAuthenticator(Email, Password)
-            };
-        }
-
-        /// <summary>
-        /// Gets data from the specified endpoint.
-        /// </summary>
-        /// <param name="Uri">The URI.</param>
-        private T Get<T>(string Uri) where T : class, new()
-        {
-            var Request = new RestRequest(Uri, Method.GET);
-            var Response = this.Rest.Execute<T>(Request);
-
-            if (Response.ResponseStatus == ResponseStatus.Completed)
-            {
-                return Response.Data;
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Posts and gets data from the specified endpoint.
-        /// </summary>
-        /// <param name="Uri">The URI.</param>
-        /// <param name="Body">The post request body.</param>
-        private T Post<T>(string Uri, dynamic Body = null) where T : class, new()
-        {
-            var Request = new RestRequest(Uri, Method.POST);
-
-            if (Body != null)
-            {
-                Request.AddJsonBody((object) Body);
-            }
-
-            var Response = this.Rest.Execute<T>(Request);
-
-            if (Response.ResponseStatus == ResponseStatus.Completed)
-            {
-                return Response.Data;
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Deletes data at the specified endpoint.
-        /// </summary>
-        /// <param name="Uri">The URI.</param>
-        private bool Delete(string Uri)
-        {
-            var Request = new RestRequest(Uri, Method.DELETE);
-            var Response = this.Rest.Execute(Request);
-
-            if (Response.ResponseStatus == ResponseStatus.Completed)
-            {
-                return Response.IsSuccessful;
-            }
-
-            return false;
+            var options = GetDefaultRestClientOptions(Host);
+            
+            options.Authenticator = new HttpBasicAuthenticator(Email, Password);
+            this.Rest = new RestClient(options, configureSerialization: s => s.UseSystemTextJson(GetSerializerOptions()));
         }
 
         /// <summary>
@@ -118,15 +87,9 @@
         /// <param name="Uri">The URI.</param>
         private async Task<T> GetAsync<T>(string Uri) where T : class, new()
         {
-            var Request = new RestRequest(Uri, Method.GET);
-            var Response = await this.Rest.ExecuteAsync<T>(Request);
+            var response = await this.Rest.GetJsonAsync<T>(Uri);
+            return response;
 
-            if (Response.ResponseStatus == ResponseStatus.Completed)
-            {
-                return Response.Data;
-            }
-
-            return null;
         }
 
         /// <summary>
@@ -134,23 +97,21 @@
         /// </summary>
         /// <param name="Uri">The URI.</param>
         /// <param name="Body">The post request body.</param>
-        private async Task<T> PostAsync<T>(string Uri, dynamic Body = null) where T : class, new()
+        private async Task<U> PostAsync<T,U>(string uri, T body = null) where T : class, new() where U : class, new()
         {
-            var Request = new RestRequest(Uri, Method.POST);
+            var response = await this.Rest.PostJsonAsync<T, U>(uri, body);
+            return response;
+        }
 
-            if (Body != null)
-            {
-                Request.AddJsonBody((object) Body);
-            }
-
-            var Response = await this.Rest.ExecuteAsync<T>(Request);
-
-            if (Response.ResponseStatus == ResponseStatus.Completed)
-            {
-                return Response.Data;
-            }
-
-            return null;
+        /// <summary>
+        /// Puts data from the specified endpoint asynchronously.
+        /// </summary>
+        /// <param name="Uri">The URI.</param>
+        /// <param name="Body">The post request body.</param>
+        private async Task<U> PutAsync<T,U>(string Uri, T Body = null) where T : class, new() where U : class, new()
+        {
+            var Response = await this.Rest.PutJsonAsync<T, U>(Uri, Body);
+            return Response;
         }
 
         /// <summary>
@@ -159,15 +120,8 @@
         /// <param name="Uri">The URI.</param>
         private async Task<bool> DeleteAsync(string Uri)
         {
-            var Request = new RestRequest(Uri, Method.DELETE);
-            var Response = await this.Rest.ExecuteAsync(Request);
-
-            if (Response.ResponseStatus == ResponseStatus.Completed)
-            {
-                return Response.IsSuccessful;
-            }
-
-            return false;
+            var response = await this.Rest.DeleteAsync(new RestRequest(Uri));
+            return response.IsSuccessStatusCode;
         }
 
         /// <summary>
@@ -177,15 +131,7 @@
         /// <param name="Token">The cancellation token.</param>
         private async Task<T> GetAsync<T>(string Uri, CancellationToken Token) where T : class, new()
         {
-            var Request = new RestRequest(Uri, Method.GET);
-            var Response = await this.Rest.ExecuteAsync<T>(Request, Token);
-
-            if (Response.ResponseStatus == ResponseStatus.Completed)
-            {
-                return Response.Data;
-            }
-
-            return null;
+            return await this.Rest.GetJsonAsync<T>(Uri, Token);
         }
 
         /// <summary>
@@ -194,23 +140,11 @@
         /// <param name="Uri">The URI.</param>
         /// <param name="Token">The cancellation token.</param>
         /// <param name="Body">The post request body.</param>
-        private async Task<T> PostAsync<T>(string Uri, CancellationToken Token, dynamic Body = null) where T : class, new()
+        private async Task<U> PostAsync<T,U>(string Uri, CancellationToken Token, T Body = null) where T : class, new() where U : class, new()
         {
-            var Request = new RestRequest(Uri, Method.POST);
+            var response = await this.Rest.PostJsonAsync<T,U>(Uri,Body, Token);
 
-            if (Body != null)
-            {
-                Request.AddJsonBody((object)Body);
-            }
-
-            var Response = await this.Rest.ExecuteAsync<T>(Request, Token);
-
-            if (Response.ResponseStatus == ResponseStatus.Completed)
-            {
-                return Response.Data;
-            }
-
-            return null;
+            return response;
         }
     }
 }

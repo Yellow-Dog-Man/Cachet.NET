@@ -1,10 +1,10 @@
 ﻿namespace Cachet.NET.Responses
 {
+    using System.Collections.Generic;
+    using System.Text.Json.Serialization;
     using global::Cachet.NET.Responses.Objects;
 
-    using RestSharp.Deserializers;
-
-    public class IncidentResponse
+    public class ComponentsResponse
     {
         /// <summary>
         /// Gets or sets the <see cref="MetaObject"/>.
@@ -16,10 +16,10 @@
         }
 
         /// <summary>
-        /// Gets or sets the Incident.
+        /// Gets or sets the components.
         /// </summary>
-        [DeserializeAs(Name = "data")]
-        public IncidentObject Incident
+        [JsonPropertyName("data")]
+        public List<ComponentObject> Components
         {
             get;
             set;

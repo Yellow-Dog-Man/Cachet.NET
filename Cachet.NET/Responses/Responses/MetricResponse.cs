@@ -1,16 +1,15 @@
 ﻿namespace Cachet.NET.Responses
 {
     using global::Cachet.NET.Responses.Objects;
+    using System.Text.Json.Serialization;
 
-    using RestSharp.Deserializers;
-
-    public class MetricPointResponse
+    public class MetricResponse
     {
         /// <summary>
-        /// Gets or sets the metric's point.
+        /// Gets or sets the metrics.
         /// </summary>
-        [DeserializeAs(Name = "data")]
-        public MetricPointObject Point
+        [JsonPropertyName("data")]
+        public MetricObject Metric
         {
             get;
             set;

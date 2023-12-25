@@ -6,13 +6,6 @@
 
     public partial class Cachet
     {
-        /// <summary>
-        /// Gets the subscribers from the Cachet API.
-        /// </summary>
-        public SubscribersResponse GetSubscribers()
-        {
-            return this.Get<SubscribersResponse>("subscribers");
-        }
 
         /// <summary>
         /// Gets the subscribers from the Cachet API.
