@@ -37,9 +37,9 @@
         /// Gets the specified group of components of the Cachet API.
         /// </summary>
         /// <param name="ComponentGroupId">The component group identifier.</param>
-        public async Task<ComponentGroupsResponse> GetComponentGroupsAsync(int ComponentGroupId)
+        public async Task<ComponentGroupResponse> GetComponentGroupsAsync(int ComponentGroupId)
         {
-            return await this.GetAsync<ComponentGroupsResponse>($"components/groups/{ComponentGroupId}");
+            return await this.GetAsync<ComponentGroupResponse>($"components/groups/{ComponentGroupId}");
         }
 
         /// <summary>

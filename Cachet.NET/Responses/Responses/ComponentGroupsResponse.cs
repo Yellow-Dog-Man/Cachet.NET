@@ -18,7 +18,7 @@
         /// <summary>
         /// Gets or sets the groups.
         /// </summary>
-        [JsonPropertyName("groups")]
+        [JsonPropertyName("data")]
         public List<ComponentGroupObject> Groups
         {
             get;
